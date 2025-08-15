@@ -1,0 +1,117 @@
+<div class="p-4">
+  <div class="mb-3">
+    <h2 class="text-900" style="font-size:1.75rem; font-weight:600; margin:0">Customer Management</h2>
+    <div class="text-700" style="margin-top:.25rem">Manage customer relationships and accounts</div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid mb-4">
+    <div class="col-12 md:col-6 xl:col-4">
+      <p-card class="h-full">
+        <!-- Row 1: title -->
+        <div class="text-900 text-xl font-semibold">Total Customers</div>
+        <!-- Row 2: number + icon (same row) -->
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ totalCustomers }}</span>
+          <span class="pi pi-users text-3xl text-primary flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+    <div class="col-12 md:col-6 xl:col-4">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold">Active Customers</div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ activeCustomers }}</span>
+          <span class="pi pi-check-circle text-3xl text-green-500 flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+    <div class="col-12 md:col-6 xl:col-4">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold">Total Revenue</div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ totalRevenue | currency:'MYR':'RM' }}</span>
+          <span class="pi pi-dollar text-3xl text-green-500 flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex align-items-center justify-content-between gap-2 mb-3">
+    <div class="flex align-items-center gap-2" style="flex:1">
+      <span class="p-input-icon-left" style="width:100%">
+        <input pInputText type="text" placeholder="Search by customer name, email, or ID..." style="width:100%" (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+
+    <div class="flex align-items-center gap-2">
+      <select class="p-inputtext" [(ngModel)]="typeFilter" (ngModelChange)="onTypeFilter($event)">
+        <option [ngValue]="null">All Types</option>
+        <option *ngFor="let t of typeOptions" [ngValue]="t.value">{{ t.label }}</option>
+      </select>
+
+      <select class="p-inputtext" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilter($event)">
+        <option [ngValue]="null">All Status</option>
+        <option *ngFor="let s of statusOptions" [ngValue]="s.value">{{ s.label }}</option>
+      </select>
+
+      <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-text"></button>
+      <button pButton type="button" icon="pi pi-plus" label="Add Customer" class="p-button-primary" (click)="onAddCustomerClick()"></button>
+    </div>
+  </div>
+
+  <!-- Customers Table -->
+  <p-table #dt [value]="customers()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50]"
+           [globalFilterFields]="['id','name','email','type','status']" [tableStyle]="{ 'min-width': '72rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Customer <p-sortIcon field="name"></p-sortIcon></th>
+        <th>Contact</th>
+        <th pSortableColumn="type">Type <p-sortIcon field="type"></p-sortIcon></th>
+        <th pSortableColumn="orders" class="text-right">Orders <p-sortIcon field="orders"></p-sortIcon></th>
+        <th pSortableColumn="totalSpent" class="text-right">Total Spent <p-sortIcon field="totalSpent"></p-sortIcon></th>
+        <th pSortableColumn="lastOrder">Last Order <p-sortIcon field="lastOrder"></p-sortIcon></th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-c>
+      <tr>
+        <td>
+          <div class="font-medium text-900">{{ c.name }}</div>
+          <div class="text-700 text-sm">{{ c.id }}</div>
+        </td>
+        <td>
+          <div class="text-900">{{ c.email }}</div>
+          <div class="text-700 text-sm">{{ c.phone }}</div>
+          <div class="text-700 text-sm">{{ c.address }}</div>
+        </td>
+        <td>
+          <p-tag [value]="c.type" [severity]="c.type === 'Enterprise' ? 'info' : 'warning'"></p-tag>
+        </td>
+        <td class="text-right">{{ c.orders }}</td>
+        <td class="text-right">{{ c.totalSpent | currency:'MYR':'RM' }}</td>
+        <td>{{ c.lastOrder | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <p-tag [value]="c.status" [severity]="statusToSeverity(c.status)"></p-tag>
+        </td>
+        <td>
+          <div class="flex align-items-center gap-1">
+            <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm" label="View"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" label="Edit"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-customer-dialog
+    [(visible)]="showAddDialog"
+    (cancel)="handleDialogCancel()"
+    (save)="handleDialogSave($event)"></app-customer-dialog>
+</div>
+
+

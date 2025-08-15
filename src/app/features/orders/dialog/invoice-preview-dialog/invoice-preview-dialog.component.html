@@ -1,0 +1,147 @@
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{width: '1100px', maxWidth: '95vw'}" (onHide)="onHide()">
+  <!-- Header with actions on the right -->
+  <ng-template pTemplate="header">
+    <div class="w-full flex align-items-center justify-content-between">
+      <span class="text-900 font-medium">Invoice Preview</span>
+      <div class="flex gap-2">
+        <button pButton pRipple type="button" icon="pi pi-download" label="Download PDF"
+          class="p-button-text p-button-rounded p-button-sm" (click)="download()"></button>
+        <button pButton pRipple type="button" icon="pi pi-print" label="Print"
+          class="p-button-text p-button-rounded p-button-sm" (click)="print()"></button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="invoice as inv; else notFound">
+    <!-- Top header -->
+    <div class="invoice-header flex justify-content-between align-items-start pb-3 border-bottom-1 surface-border">
+      <div class="left">
+        <div class="invoice-title">INVOICE</div>
+        <div class="meta text-600">
+          <div>Invoice #: <strong>{{ inv.id }}</strong></div>
+          <div>Date: {{ inv.issueDate | date:'dd/MM/yyyy' }}</div>
+          <div>Due Date: {{ inv.dueDate | date:'dd/MM/yyyy' }}</div>
+        </div>
+      </div>
+
+      <div class="right text-right line-height-3 text-600">
+        <div class="brand text-primary font-extrabold text-lg mb-1">WarehouseOS Sdn. Bhd.</div>
+        <div>123, Jalan Damansara</div>
+        <div>50450 Kuala Lumpur, Malaysia</div>
+        <div>Phone: +60 3-9212 3456</div>
+        <div>Email: billing@warehouseos.com</div>
+        <div>SST Reg No: 1234567890</div>
+      </div>
+    </div>
+
+    <!-- Bill To -->
+    <div class="grid mt-4 pb-4 border-bottom-1 surface-border">
+      <div class="col-12">
+        <div class="section-heading">BILL TO</div>
+        <div class="text-700">
+          <div class="font-medium">{{ inv.customerName }}</div>
+          <div *ngIf="inv.customerEmail">{{ inv.customerEmail }}</div>
+          <div class="mt-2">Phone: 01119995416</div>
+          <div>{{inv.deliveryAddress}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items table -->
+    <div class="pt-4 pb-4 border-bottom-1 surface-border">
+      <div class="section-subtitle">ITEMIZED SERVICES/PRODUCTS</div>
+
+      <div class="table-wrapper surface-card border-1 surface-border border-round overflow-hidden">
+        <table class="items-table w-full">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th class="text-center">Quantity</th>
+              <th class="text-right">Unit Price</th>
+              <th class="text-right">Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of inv.items">
+              <td>{{ it.description }}</td>
+              <td class="text-center">{{ it.quantity }}</td>
+              <td class="text-right">{{ it.unitPrice | currency:'MYR':'RM' }}</td>
+              <td class="text-right font-semibold">{{ it.total | currency:'MYR':'RM' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary card aligned right -->
+      <div class="flex justify-content-end mt-3">
+        <table class="table-wrapper surface-card border-1 surface-border border-round overflow-hidden">
+          <thead>
+            <tr style="background: #f9fafb;">
+              <th colspan="2" class="text-left font-semibold text-sm text-700 px-3 py-2 border-bottom-1 surface-border">
+                INVOICE SUMMARY
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-3 py-2 text-700">Subtotal:</td>
+              <td class="px-3 py-2 text-right">{{ inv.subtotal | currency:'MYR':'RM' }}</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-700">SST (8%):</td>
+              <td class="px-3 py-2 text-right">{{ inv.tax | currency:'MYR':'RM' }}</td>
+            </tr>
+            <tr class="font-extrabold border-top-1 surface-border">
+              <td class="px-3 py-2">Grand Total:</td>
+              <td class="px-3 py-2 text-right">{{ inv.total | currency:'MYR':'RM' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Payment sections -->
+    <div class="grid pt-4 pb-3 border-bottom-1 surface-border">
+
+      <div class="col-12 md:col-6">
+        <div class="section-heading">PAYMENT TERMS</div>
+        <div class="kv">
+          <div><span class="label">Payment Method</span><span class="value">Bank Transfer</span></div>
+          <div><span class="label">Payment Status</span>
+            <span class="value">
+              <p-tag [value]="inv.status" [severity]="inv.status === 'Paid' ? 'success' : 'warning'"></p-tag>
+            </span>
+          </div>
+          <div><span class="label">Due Date</span><span class="value">{{ inv.dueDate | date:'dd/MM/yyyy' }}</span></div>
+        </div>
+        <div class="small text-600 mt-2">
+          Payment is due within 30 days of invoice date. Late payments may incur additional charges.
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="section-heading">PAYMENT METHODS ACCEPTED</div>
+        <ul class="ml-3 mt-1 mb-2 text-700">
+          <li>Bank Transfer (ACH)</li>
+          <li>Wire Transfer</li>
+          <li>Credit Card (Visa, MasterCard, Amex)</li>
+          <li>Cash on Delivery (COD)</li>
+        </ul>
+        <div class="small text-600">For bank transfers, please reference invoice number {{ inv.id }}</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-3 line-height-3">
+      <div>Thank you for your business!</div>
+      <div class="text-600">This invoice was generated electronically and is valid without signature.</div>
+      <div class="text-600">For questions regarding this invoice, please contact us at billing@warehouseos.com or 60 3-9212 3456</div>
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <div class="p-4">Invoice not found.</div>
+  </ng-template>
+</p-dialog>
+

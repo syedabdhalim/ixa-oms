@@ -1,0 +1,138 @@
+<div class="p-4">
+  <div class="mb-3">
+    <h2 class="text-900" style="font-size:1.75rem; font-weight:600; margin:0">User Management</h2>
+    <div class="text-700" style="margin-top:.25rem">Manage system users and access permissions</div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid mb-4">
+    <!-- Total Users -->
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold mb-2">Total Users</div>
+        <div class="flex align-items-baseline justify-content-between">
+          <span class="text-4xl font-bold" style="line-height:1">{{ totalUsers }}</span>
+          <i class="pi pi-users text-3xl text-primary flex-shrink-0"></i>
+        </div>
+      </p-card>
+    </div>
+  
+    <!-- Active Users -->
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold mb-2">Active Users</div>
+        <div class="flex align-items-baseline justify-content-between">
+          <span class="text-4xl font-bold" style="line-height:1">{{ activeUsers }}</span>
+          <i class="pi pi-user text-3xl text-green-500 flex-shrink-0"></i>
+        </div>
+      </p-card>
+    </div>
+  
+    <!-- By Role (ikon kanan, guna PrimeFlex list) -->
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold mb-2">By Role</div>
+        <div class="flex align-items-start justify-content-between">
+          <ul class="list-none m-0 p-0">
+            <li *ngFor="let r of roleBreakdown" class="mb-1">
+              <span class="font-semibold">{{ r.count }}</span>
+              <span class="ml-1">
+                {{ r.role }}<ng-container *ngIf="r.count !== 1 && r.role !== 'Staff'">s</ng-container>
+              </span>
+            </li>
+          </ul>
+          <i class="pi pi-users text-3xl text-purple-500 flex-shrink-0 mt-1"></i>
+        </div>
+      </p-card>
+    </div>
+  
+    <!-- Inactive Users -->
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold mb-2">Inactive Users</div>
+        <div class="flex align-items-baseline justify-content-between">
+          <span class="text-4xl font-bold" style="line-height:1">{{ inactiveUsers }}</span>
+          <i class="pi pi-user-minus text-3xl text-amber-500 flex-shrink-0"></i>
+        </div>
+      </p-card>
+    </div>
+  </div>
+  
+
+  <!-- Toolbar -->
+  <div class="flex align-items-center justify-content-between gap-2 mb-3">
+    <div class="flex align-items-center gap-2" style="flex:1">
+      <span class="p-input-icon-left" style="width:100%">
+        <input pInputText type="text" placeholder="Search by name, email, or user ID..." style="width:100%" (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+
+    <div class="flex align-items-center gap-2">
+      <p-select [options]="roleOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="All Roles"
+                [showClear]="true"
+                [(ngModel)]="roleFilter"
+                (ngModelChange)="onRoleFilter($event)"></p-select>
+
+      <p-select [options]="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="All Status"
+                [showClear]="true"
+                [(ngModel)]="statusFilter"
+                (ngModelChange)="onStatusFilter($event)"></p-select>
+
+      <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-text"></button>
+      <button pButton type="button" icon="pi pi-plus" label="Add User" class="p-button-primary" (click)="onAddUserClick()"></button>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <p-table #dt [value]="users()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50]"
+           [globalFilterFields]="['id','name','email','role','status']" [tableStyle]="{ 'min-width': '72rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th pSortableColumn="role">Role <p-sortIcon field="role"></p-sortIcon></th>
+        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+        <th pSortableColumn="lastLogin">Last Login <p-sortIcon field="lastLogin"></p-sortIcon></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-u>
+      <tr>
+        <td>
+          <div class="flex align-items-center gap-2">
+            <p-avatar [label]="getInitials(u.name)" shape="circle" styleClass="mr-2"></p-avatar>
+            <div>
+              <div class="font-medium text-900">{{ u.name }}</div>
+              <div class="text-700 text-sm">{{ u.id }}</div>
+            </div>
+          </div>
+        </td>
+        <td>{{ u.email }}</td>
+        <td><p-tag [value]="u.role" [severity]="roleToSeverity(u.role)"></p-tag></td>
+        <td><p-tag [value]="u.status" [severity]="statusToSeverity(u.status)"></p-tag></td>
+        <td>{{ u.lastLogin | date:'dd/MM/yyyy hh:mm a' }}</td>
+        <td>
+          <div class="flex align-items-center gap-1">
+            <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm" label="View"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" label="Edit"></button>
+            <button pButton type="button" icon="pi pi-user-minus" class="p-button-text p-button-sm p-button-danger" [label]="u.status==='Active' ? 'Deactivate' : 'Activate'"></button>
+            <button pButton type="button" icon="pi pi-refresh" class="p-button-text p-button-sm" label="Reset"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-user-dialog
+    [(visible)]="showAddDialog"
+    (cancel)="handleDialogCancel()"
+    (save)="handleDialogSave($event)"></app-user-dialog>
+</div>
+
+

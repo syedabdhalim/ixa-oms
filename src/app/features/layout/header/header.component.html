@@ -1,0 +1,30 @@
+<header class="header">
+  <div class="start">
+    <button class="menu-btn" (click)="menuClick.emit()" title="Menu">
+      <i class="pi pi-bars"></i>
+    </button>
+    <h1 class="title">{{ pageTitle }}</h1>
+  </div>
+
+  <div class="end">
+    <div class="search">
+      <i class="pi pi-search"></i>
+      <input type="text" placeholder="Search..." />
+    </div>
+
+    <button class="icon-btn" title="Notifications">
+      <i class="pi pi-bell"></i>
+    </button>
+
+    <div class="profile">
+      <div class="meta">
+        <div class="name">John Smith</div>
+        <div class="role">{{ roleDisplayName }}</div>
+      </div>
+      <div class="avatar">JS</div>
+      <button class="icon-btn" (click)="logout.emit()" title="Logout">
+        <i class="pi pi-sign-out"></i>
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,61 @@
+<!-- Page header (outside the card) -->
+<div class="flex flex-column align-items-center text-center pt-6 pb-3 gap-2">
+    <div class="flex align-items-center gap-2">
+        <i class="pi pi-box" style="font-size: 2rem; color: var(--brand)"></i>
+        <span class="text-3xl font-bold">IXA OMS</span>
+    </div>
+    <h2 class="m-0 text-2xl font-semibold">Sign in to your account</h2>
+    <small class="text-color-secondary">Enterprise Warehouse Management System</small>
+</div>
+
+<!-- Auth card -->
+<div class="flex justify-content-center px-3 pb-6">
+    <p-card class="login-card surface-card">
+        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-3">
+            <!-- Email -->
+            <div class="form-field flex flex-column gap-1">
+                <label for="email" class="text-sm font-medium">Email address</label>
+                <input id="email" type="email" pInputText formControlName="email" placeholder="admin@warehouseos.com"
+                    class="w-full" />
+                <small *ngIf="form.controls.email.touched && form.controls.email.invalid" class="error">
+                    Valid email is required
+                </small>
+            </div>
+
+            <!-- Password -->
+            <div class="form-field flex flex-column gap-1">
+                <label for="password" class="text-sm font-medium">Password</label>
+                <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false"
+                    inputStyleClass="w-full" placeholder="••••••••"></p-password>
+                <small *ngIf="form.controls.password.touched && form.controls.password.invalid" class="error">
+                    Password is required
+                </small>
+            </div>
+
+            <!-- Role -->
+            <div class="form-field flex flex-column gap-1">
+                <label for="role" class="text-sm font-medium">Role</label>
+                <p-select id="role" formControlName="role" [options]="roles" optionLabel="labelFull" optionValue="value"
+                    appendTo="body" class="w-full">
+                </p-select>
+
+                <small class="help">Select your role to simulate different access levels</small>
+            </div>
+
+            <!-- Submit -->
+            <p-button type="submit" label="Sign in" styleClass="w-full" [loading]="submitting"></p-button>
+        </form>
+
+        <p-divider align="center" type="solid" class="mt-4 mb-3">
+            <b>Demo Credentials</b>
+        </p-divider>
+
+        <div class="demo-cred">
+            <p class="m-0 font-medium">Test Accounts:</p>
+            <p class="m-0">Email: admin@warehouseos.com</p>
+            <p class="m-0">Email: manager@warehouseos.com</p>
+            <p class="m-0">Email: staff@warehouseos.com</p>
+            <p class="m-0">Password: Any password</p>
+        </div>
+    </p-card>
+</div>

@@ -1,0 +1,170 @@
+:host {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color: #111827;
+}
+
+/* PrimeNG dialog polish */
+:host ::ng-deep .p-dialog .p-dialog-header {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+:host ::ng-deep .p-dialog .p-dialog-content {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* toolbar buttons top-right */
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin-bottom: .75rem;
+}
+
+/* header block */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.invoice-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  margin-bottom: .5rem;
+}
+.meta > div { line-height: 1.35; color: #4b5563; }
+
+.company-block {
+  text-align: right;
+  line-height: 1.35;
+  color: #4b5563;
+}
+.company-block .brand {
+  color: #2563eb; /* biru brand */
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: .25rem;
+}
+
+/* generic sections */
+.section {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.section:last-of-type { border-bottom: 0; }
+
+.section-heading {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #6b7280;
+  margin-bottom: .5rem;
+}
+.section-subtitle {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #6b7280;
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+}
+
+/* two column grids */
+.grid.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.address { color: #374151; }
+
+/* table look */
+.table-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.items-table thead th {
+  background: #f9fafb;
+  color: #6b7280;
+  text-transform: uppercase;
+  font-size: .75rem;
+  letter-spacing: .02em;
+  font-weight: 700;
+  padding: .75rem 1rem;
+}
+.items-table tbody td {
+  padding: .75rem 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+/* summary card on the right */
+.summary-pane {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.summary-card {
+  width: 320px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  background: #fff;
+}
+.summary-header {
+  font-weight: 700;
+  color: #374151;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: .5rem .75rem;
+  border-radius: 6px;
+  margin-bottom: .5rem;
+}
+.summary-card .row {
+  display: flex;
+  justify-content: space-between;
+  padding: .35rem 0;
+}
+.summary-card .grand {
+  border-top: 1px solid #e5e7eb;
+  margin-top: .35rem;
+  padding-top: .5rem;
+  font-weight: 800;
+}
+
+/* payment sections */
+.kv > div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: .5rem;
+  padding: .2rem 0;
+}
+.kv .label { color: #6b7280; }
+.small { font-size: .82rem; }
+.muted { color: #6b7280; }
+.mt-2 { margin-top: .5rem; }
+.bullets { margin: .25rem 0 .5rem 1rem; }
+
+/* footer */
+.invoice-footer {
+  text-align: center;
+  margin-top: .75rem;
+  line-height: 1.4;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .grid.two-col { grid-template-columns: 1fr; }
+  .summary-card { width: 100%; }
+  .company-block { text-align: left; margin-top: .75rem; }
+}
+.summary-card { box-shadow: 0 1px 0 rgba(17,24,39,.04); }
+

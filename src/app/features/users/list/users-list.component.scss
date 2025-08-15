@@ -1,0 +1,36 @@
+
+
+.icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  color: white;
+}
+.icon.blue { background: #3b82f6; }
+.icon.green { background: #22c55e; }
+.icon.purple { background: #8b5cf6; }
+.icon.amber { background: #f59e0b; }
+
+.meta .label {
+  color: var(--text-color-secondary);
+  font-size: .875rem;
+}
+.meta .value {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+/* Align PrimeNG tags nicely inside table cells */
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  vertical-align: middle;
+}
+
+:host ::ng-deep .p-tag {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  vertical-align: middle;
+}
+

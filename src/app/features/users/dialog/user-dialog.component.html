@@ -1,0 +1,31 @@
+<p-dialog [(visible)]="visible" [modal]="true" header="Add User" [style]="{width: '34rem'}" (onHide)="onCancel()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-fluid">
+    <div class="p-field">
+      <label for="name">Full Name</label>
+      <input id="name" type="text" pInputText formControlName="name" placeholder="e.g. Jane Doe" />
+    </div>
+
+    <div class="p-field">
+      <label for="email">Email</label>
+      <input id="email" type="email" pInputText formControlName="email" placeholder="name@company.com" />
+    </div>
+
+    <div class="grid gap-3">
+      <div>
+        <label for="role">Role</label>
+        <p-select inputId="role" formControlName="role" [options]="roleOptions" optionLabel="label" optionValue="value"></p-select>
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <p-select inputId="status" formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value"></p-select>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <button pButton type="button" class="p-button-text" label="Cancel" (click)="onCancel()"></button>
+      <button pButton type="submit" class="p-button-primary" label="Save" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-dialog>
+
+

@@ -1,0 +1,64 @@
+<div class="p-4">
+  <div class="mb-3">
+    <h2 class="text-900" style="font-size:1.75rem; font-weight:600; margin:0">Orders</h2>
+    <div class="text-700" style="margin-top:.25rem">Manage and track all warehouse orders</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex align-items-center justify-content-between gap-2 mb-3">
+    <div class="flex align-items-center gap-2" style="flex:1">
+      <span class="p-input-icon-left" style="width:100%">
+        <input pInputText type="text" placeholder="Search orders by customer or order ID..." style="width:100%" (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+
+    <div class="flex align-items-center gap-2">
+      <select class="p-inputtext" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilter($event)">
+        <option [ngValue]="null">All Status</option>
+        <option *ngFor="let s of statusOptions" [ngValue]="s.value">{{ s.label }}</option>
+      </select>
+      <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-text"></button>
+      <button pButton type="button" icon="pi pi-plus" label="New Order" class="p-button-primary" (click)="onNewOrderClick()"></button>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <p-table #dt [value]="orders()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50]" [globalFilterFields]="['id','customer','status','priority']" [tableStyle]="{ 'min-width': '64rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">Order ID <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="customer">Customer <p-sortIcon field="customer"></p-sortIcon></th>
+        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th pSortableColumn="items" class="text-right">Items <p-sortIcon field="items"></p-sortIcon></th>
+        <th pSortableColumn="total" class="text-right">Total <p-sortIcon field="total"></p-sortIcon></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.customer }}</td>
+        <td>{{ order.date | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <p-tag [value]="order.status" [severity]="statusToSeverity(order.status)"></p-tag>
+        </td>
+        <td>
+          <p-tag [value]="order.priority" [severity]="priorityToSeverity(order.priority)"></p-tag>
+        </td>
+        <td class="text-right">{{ order.items }}</td>
+        <td class="text-right">{{ order.total | currency:'MYR':'RM' }}</td>
+        <td class="flex gap-1">
+          <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm" label="View" (click)="onPreview(order)"></button>
+          <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" label="Edit"></button>
+          <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" label="Delete"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <app-order-dialog [(visible)]="showCreateDialog" (cancel)="handleCreateCancel()" (save)="handleCreateSave($event)"></app-order-dialog>
+  <app-invoice-preview-dialog [(visible)]="showInvoiceDialog" [invoice]="invoicePreview" (close)="showInvoiceDialog=false"></app-invoice-preview-dialog>
+</div>
+
+

@@ -1,0 +1,105 @@
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{width: '900px', maxWidth: '95vw'}" header="Add New Customer" (onHide)="cancel.emit()">
+  <form class="p-fluid" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid">
+      <div class="col-12">
+        <div class="section-title">Basic Information</div>
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Company/Customer Name *</label>
+        <input pInputText type="text" formControlName="name" placeholder="Enter company or customer name" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Email Address</label>
+        <input pInputText type="email" formControlName="email" placeholder="Enter email address" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Phone Number</label>
+        <input pInputText type="text" formControlName="phone" placeholder="Enter phone number" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Website</label>
+        <input pInputText type="text" formControlName="website" placeholder="https://example.com" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Customer Type *</label>
+        <select class="p-inputtext w-full" formControlName="customerType">
+          <option *ngFor="let o of customerTypeOptions" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Status *</label>
+        <select class="p-inputtext w-full" formControlName="status">
+          <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+
+      <div class="col-12 mt-3">
+        <div class="section-title">Contact Person</div>
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Contact Person Name</label>
+        <input pInputText type="text" formControlName="contactName" placeholder="Enter contact person name" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Job Title</label>
+        <input pInputText type="text" formControlName="jobTitle" placeholder="Enter job title" />
+      </div>
+
+      <div class="col-12 mt-3">
+        <div class="section-title">Address Information</div>
+      </div>
+      <div class="col-12">
+        <label class="field-label">Street Address *</label>
+        <input pInputText type="text" formControlName="street" placeholder="Enter street address" />
+      </div>
+      <div class="col-12 md:col-4">
+        <label class="field-label">City *</label>
+        <input pInputText type="text" formControlName="city" placeholder="Enter city" />
+      </div>
+      <div class="col-12 md:col-4">
+        <label class="field-label">State/Province *</label>
+        <input pInputText type="text" formControlName="state" placeholder="Enter state" />
+      </div>
+      <div class="col-12 md:col-4">
+        <label class="field-label">ZIP/Postal Code</label>
+        <input pInputText type="text" formControlName="zip" placeholder="Enter ZIP code" />
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Country *</label>
+        <select class="p-inputtext w-full" formControlName="country">
+          <option *ngFor="let c of countryOptions" [value]="c.value">{{ c.label }}</option>
+        </select>
+      </div>
+
+      <div class="col-12 mt-3">
+        <div class="section-title">Business Information</div>
+      </div>
+      <div class="col-12 md:col-6">
+        <label class="field-label">Tax ID / VAT Number</label>
+        <input pInputText type="text" formControlName="taxId" placeholder="Enter tax ID" />
+      </div>
+      <div class="col-12 md:col-3">
+        <label class="field-label">Payment Terms (Days)</label>
+        <p-inputNumber formControlName="paymentTermsDays" [min]="0" [useGrouping]="false"></p-inputNumber>
+      </div>
+      <div class="col-12 md:col-3">
+        <label class="field-label">Credit Limit ($)</label>
+        <p-inputNumber formControlName="creditLimit" mode="currency" currency="USD" [min]="0"></p-inputNumber>
+      </div>
+
+      <div class="col-12 mt-3">
+        <div class="section-title">Additional Notes</div>
+      </div>
+      <div class="col-12">
+        <textarea class="p-inputtext w-full" formControlName="notes" rows="4" placeholder="Enter any additional notes about this customer"></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-4">
+      <button type="button" pButton label="Cancel" class="p-button-text" (click)="cancel.emit()"></button>
+      <button type="submit" pButton label="Save" class="p-button-primary" [disabled]="form.invalid"></button>
+    </div>
+  </form>
+</p-dialog>
+
+

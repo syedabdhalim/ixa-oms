@@ -1,0 +1,20 @@
+/* login.component.scss additions */
+.login-card {
+  width: 100%;
+  max-width: 42rem;           /* matches the wider card feel */
+  padding: 0.5rem 0.75rem;    /* tighter inner padding */
+  border-radius: 12px;
+}
+
+.form-field :where(input.p-inputtext) { height: 44px; }
+.form-field :where(.p-password .p-inputtext) { height: 44px; }
+.form-field :where(.p-select) { min-height: 44px; }
+.form-field label { color: var(--p-text-color); }
+
+small.help { color: var(--p-text-muted-color); }
+small.error { color: var(--p-red-500); }
+
+:where(.p-button.w-full) {
+  height: 44px;
+  font-weight: 600;
+}

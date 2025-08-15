@@ -1,0 +1,25 @@
+<!-- Overlay (mobile only, auto-hidden on lg via CSS) -->
+<div *ngIf="isOpen" class="overlay" (click)="closeSidebar.emit()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" [class.open]="isOpen">
+  <div class="sidebar-header">
+    <i class="pi pi-box text-primary text-2xl"></i>
+    <span class="ml-2 font-bold text-lg">IXA OMS</span>
+
+    <!-- Close button (shown on mobile, hidden on lg via CSS) -->
+    <button class="close-btn" (click)="closeSidebar.emit()">
+      <i class="pi pi-times"></i>
+    </button>
+  </div>
+
+  <nav class="nav-list">
+    <a *ngFor="let item of navItems"
+       [routerLink]="item.path"
+       (click)="closeSidebar.emit()"
+       [class.active]="isActive(item.path)">
+      <i [class]="item.icon"></i>
+      <span>{{ item.name }}</span>
+    </a>
+  </nav>
+</aside>

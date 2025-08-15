@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--surface-ground);
+}
+
+/* Main column is a flex column with header fixed height and scrollable page */
+.main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* prevent overflow */
+  margin-left: 0;
+}
+
+.page {
+  flex: 1 1 auto;
+  overflow: auto;
+  background: var(--surface-ground);
+}
+
+/* Desktop: reserve width for persistent sidebar */
+@media (min-width: 992px) {
+  .main {
+    margin-left: 16rem; /* keep in sync with sidebar width */
+  }
+}

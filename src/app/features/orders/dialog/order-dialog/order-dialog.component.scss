@@ -1,0 +1,56 @@
+.section-title {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: .5rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--text-color-secondary);
+}
+
+/* Make inner form controls consistent width */
+.dialog-form :where(input.p-inputtext, .p-inputnumber, .p-select, p-datepicker) {
+  width: 100%;
+}
+
+.items-card {
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: 1fr 140px 180px 160px 80px;
+  gap: 12px;
+  align-items: center;
+}
+
+.items-header {
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  margin-bottom: .5rem;
+}
+
+.items-row {
+  padding: .5rem 0;
+  border-top: 1px dashed var(--surface-border);
+}
+
+.subtotal {
+  font-weight: 600;
+}
+
+.actions {
+  text-align: right;
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+
+

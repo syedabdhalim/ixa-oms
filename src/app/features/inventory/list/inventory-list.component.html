@@ -1,0 +1,123 @@
+<div class="p-4">
+  <div class="mb-3">
+    <h2 class="text-900" style="font-size:1.75rem; font-weight:600; margin:0">Inventory Management</h2>
+    <div class="text-700" style="margin-top:.25rem">Track and manage warehouse inventory levels</div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid mb-4">
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <!-- Row 1: title -->
+        <div class="text-900 text-xl font-semibold">Total Items</div>
+    
+        <!-- Row 2: number + icon (same row) -->
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ totalItems }}</span>
+          <span class="pi pi-box text-3xl text-primary flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+    
+
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold">Low Stock</div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ lowStockCount }}</span>
+          <span class="pi pi-exclamation-triangle text-3xl text-yellow-500 flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold">Out of Stock</div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ outOfStockCount }}</span>
+          <span class="pi pi-times-circle text-3xl text-red-500 flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+    <div class="col-12 md:col-6 xl:col-3">
+      <p-card class="h-full">
+        <div class="text-900 text-xl font-semibold">Total Value</div>
+        <div class="flex align-items-center justify-content-between mt-2">
+          <span class="text-4xl font-bold" style="line-height:1">{{ totalValue | currency:'MYR':'RM' }}</span>
+          <span class="pi pi-dollar text-3xl text-green-500 flex-shrink-0"></span>
+        </div>
+      </p-card>
+    </div>
+    
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex align-items-center justify-content-between gap-2 mb-3">
+    <div class="flex align-items-center gap-2" style="flex:1">
+      <span class="p-input-icon-left" style="width:100%">
+        <input pInputText type="text" placeholder="Search by item name or SKU..." style="width:100%" (input)="onGlobalFilter($event)" />
+      </span>
+    </div>
+
+    <div class="flex align-items-center gap-2">
+      <select class="p-inputtext" [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryFilter($event)">
+        <option [ngValue]="null">All Categories</option>
+        <option *ngFor="let c of categoryOptions" [ngValue]="c.value">{{ c.label }}</option>
+      </select>
+
+      <select class="p-inputtext" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilter($event)">
+        <option [ngValue]="null">All Status</option>
+        <option *ngFor="let s of statusOptions" [ngValue]="s.value">{{ s.label }}</option>
+      </select>
+
+      <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-text"></button>
+      <button pButton type="button" icon="pi pi-plus" label="Add Item" class="p-button-primary"></button>
+    </div>
+  </div>
+
+  <!-- Inventory Table -->
+  <p-table #dt [value]="items()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50]"
+           [globalFilterFields]="['id','name','sku','category','status']" [tableStyle]="{ 'min-width': '72rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Item</th>
+        <th>SKU</th>
+        <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+        <th>Stock Level</th>
+        <th>Status</th>
+        <th class="text-right" pSortableColumn="unitPrice">Unit Price <p-sortIcon field="unitPrice"></p-sortIcon></th>
+        <th class="text-right">Total Value</th>
+        <th>Location</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-i>
+      <tr>
+        <td>
+          <div class="font-medium text-900">{{ i.name }}</div>
+          <div class="text-700 text-sm">{{ i.id }}</div>
+        </td>
+        <td>{{ i.sku }}</td>
+        <td>{{ i.category }}</td>
+        <td>
+          <div class="text-900">{{ i.stock }}</div>
+          <div class="text-700 text-sm">Min: {{ i.min }} | Max: {{ i.max }}</div>
+        </td>
+        <td>
+          <p-tag [value]="i.status" [severity]="statusToSeverity(i.status)"></p-tag>
+        </td>
+        <td class="text-right">{{ i.unitPrice | currency:'MYR':'RM' }}</td>
+        <td class="text-right">{{ (i.unitPrice * i.stock) | currency:'MYR':'RM' }}</td>
+        <td>{{ i.location }}</td>
+        <td class="flex gap-1">
+          <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm" label="View"></button>
+          <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" label="Edit"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+

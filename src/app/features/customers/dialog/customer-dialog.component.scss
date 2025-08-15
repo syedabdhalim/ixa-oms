@@ -1,0 +1,39 @@
+.section-title {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: .5rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--text-color-secondary);
+  font-size: .875rem;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputnumber-input,
+:host ::ng-deep select.p-inputtext,
+:host ::ng-deep textarea.p-inputtext {
+  width: 100%;
+  padding: .6rem .75rem;
+  border-radius: .5rem;
+}
+
+:host ::ng-deep .p-inputtext:focus,
+:host ::ng-deep .p-inputnumber-input:focus,
+:host ::ng-deep select.p-inputtext:focus,
+:host ::ng-deep textarea.p-inputtext:focus {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary-color) 20%, transparent);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  padding-bottom: .75rem;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  padding-top: 0.5rem;
+}
+
+

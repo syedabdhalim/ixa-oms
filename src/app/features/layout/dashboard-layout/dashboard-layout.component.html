@@ -1,0 +1,22 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <app-sidebar
+    [isOpen]="sidebarOpen"
+    [userRole]="userRole"
+    (closeSidebar)="sidebarOpen = false">
+  </app-sidebar>
+
+  <!-- Main content area -->
+  <div class="main">
+    <app-header
+      [userRole]="userRole"
+      (menuClick)="sidebarOpen = true"
+      (logout)="handleLogout()">
+    </app-header>
+
+    <!-- Routed page content -->
+    <main class="page">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
