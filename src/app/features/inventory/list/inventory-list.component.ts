@@ -7,16 +7,19 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
+import { InventoryItemDialogComponent, type InventoryItemFormValue } from '../dialog/item-dialog/inventory-item-dialog.component';
 
 @Component({
   standalone: true,
   selector: 'app-inventory-list',
-  imports: [CommonModule, FormsModule, TableModule, TagModule, ButtonModule, InputTextModule, CardModule],
+  imports: [CommonModule, FormsModule, TableModule, TagModule, ButtonModule, InputTextModule, CardModule, InventoryItemDialogComponent],
   templateUrl: './inventory-list.component.html',
   styleUrls: ['./inventory-list.component.scss']
 })
 export class InventoryListComponent {
   @ViewChild('dt') table?: Table;
+
+  showCreateDialog = false;
 
   protected readonly items = signal<Array<InventoryRow>>([
     {
@@ -165,6 +168,33 @@ export class InventoryListComponent {
       default:
         return 'secondary';
     }
+  }
+
+  onAddItemClick() {
+    this.showCreateDialog = true;
+  }
+
+  handleCreateCancel() {
+    this.showCreateDialog = false;
+  }
+
+  handleCreateSave(value: InventoryItemFormValue) {
+    const newId = `INV-${(this.items().length + 1).toString().padStart(3, '0')}`;
+    const status: InventoryRow['status'] = value.stock === 0 ? 'Out of Stock' : value.stock <= value.min ? 'Low Stock' : 'In Stock';
+    const newRow: InventoryRow = {
+      id: newId,
+      name: value.name,
+      sku: value.sku,
+      category: value.category,
+      stock: value.stock,
+      min: value.min,
+      max: value.max,
+      status,
+      unitPrice: value.unitPrice,
+      location: value.location,
+    };
+    this.items.update(list => [newRow, ...list]);
+    this.showCreateDialog = false;
   }
 }
 

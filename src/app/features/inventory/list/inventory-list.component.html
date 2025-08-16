@@ -73,7 +73,7 @@
       </select>
 
       <button pButton type="button" icon="pi pi-upload" label="Export" class="p-button-text"></button>
-      <button pButton type="button" icon="pi pi-plus" label="Add Item" class="p-button-primary"></button>
+      <button pButton type="button" icon="pi pi-plus" label="Add Item" class="p-button-primary" (click)="onAddItemClick()"></button>
     </div>
   </div>
 
@@ -118,6 +118,7 @@
       </tr>
     </ng-template>
   </p-table>
+  <app-inventory-item-dialog [(visible)]="showCreateDialog" (cancel)="handleCreateCancel()" (save)="handleCreateSave($event)"></app-inventory-item-dialog>
 </div>
 
 

@@ -1,0 +1,12 @@
+.p-fluid {
+  label {
+    font-weight: 600;
+  }
+}
+
+.field :where(input, .p-inputnumber, .p-select) {
+  width: 100%;
+}
+
+
+

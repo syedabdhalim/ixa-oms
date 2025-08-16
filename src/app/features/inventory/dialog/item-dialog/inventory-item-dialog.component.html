@@ -1,0 +1,59 @@
+<p-dialog [(visible)]="visible" [modal]="true" header="Add Inventory Item" [style]="{width:'700px', maxWidth:'95vw'}">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="p-fluid">
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label class="block mb-1">Name</label>
+        <input pInputText type="text" formControlName="name" class="w-full" />
+      </div>
+      <div class="field col-12 md:col-6">
+        <label class="block mb-1">SKU</label>
+        <input pInputText type="text" formControlName="sku" class="w-full" />
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label class="block mb-1">Category</label>
+        <p-select formControlName="category" [options]="categoryOptions" optionLabel="label" optionValue="value" placeholder="Select category" class="w-full"></p-select>
+      </div>
+      <div class="field col-6 md:col-3">
+        <div class="flex align-items-center justify-content-between mb-1">
+          <label>Stock</label>
+          <p-tag [value]="statusPreview" [severity]="statusPreview === 'In Stock' ? 'success' : (statusPreview === 'Low Stock' ? 'warning' : 'danger')" class="ml-2"></p-tag>
+        </div>
+        <p-inputNumber inputId="stock" formControlName="stock" mode="decimal" [min]="0" inputStyleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field col-6 md:col-3">
+        <label class="block mb-1">Unit Price (RM)</label>
+        <p-inputNumber inputId="unitPrice" formControlName="unitPrice" mode="currency" currency="MYR" [min]="0" inputStyleClass="w-full"></p-inputNumber>
+      </div>
+
+      <div class="field col-6 md:col-3">
+        <div class="flex align-items-center gap-2 mb-1">
+          <label class="m-0">Min</label>
+          <span pTooltip="Reorder threshold. If stock ≤ Min, item is flagged as Low Stock." tooltipPosition="top" class="pi pi-info-circle text-600" style="font-size: .9rem"></span>
+        </div>
+        <p-inputNumber inputId="min" formControlName="min" mode="decimal" [min]="0" inputStyleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field col-6 md:col-3">
+        <div class="flex align-items-center gap-2 mb-1">
+          <label class="m-0">Max</label>
+          <span pTooltip="Target maximum level for planning and capacity. Must be ≥ Min." tooltipPosition="top" class="pi pi-info-circle text-600" style="font-size: .9rem"></span>
+        </div>
+        <p-inputNumber inputId="max" formControlName="max" mode="decimal" [min]="0" inputStyleClass="w-full"></p-inputNumber>
+        <div class="text-red-600 text-sm mt-1" *ngIf="form.errors?.['minMax']">Min must be less than or equal to Max.</div>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label class="block mb-1">Location</label>
+        <input pInputText type="text" formControlName="location" class="w-full" />
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-3">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="onCancel()"></button>
+      <button pButton type="submit" label="Save" class="p-button-primary"></button>
+    </div>
+  </form>
+  
+</p-dialog>
+
+
