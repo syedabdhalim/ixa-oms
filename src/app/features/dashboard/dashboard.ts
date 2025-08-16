@@ -6,11 +6,12 @@ import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../core/services/auth.service';
+import { InvoicePreviewDialogComponent, type Invoice } from '../orders/dialog/invoice-preview-dialog/invoice-preview-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CardModule, TagModule, TableModule, ProgressBarModule, ButtonModule],
+  imports: [CommonModule, CardModule, TagModule, TableModule, ProgressBarModule, ButtonModule, InvoicePreviewDialogComponent],
   template: `
     <div class="p-4 lg:p-5">
       <!-- Top KPI cards -->
@@ -80,11 +81,12 @@ import { AuthService } from '../../core/services/auth.service';
                   </td>
                   <td class="text-right">{{ order.total | currency:'MYR':'RM' }}</td>
                   <td>
-                    <button pButton type="button" icon="pi pi-eye" label="View" class="p-button-text p-button-sm"></button>
+                    <button pButton type="button" icon="pi pi-eye" label="View" class="p-button-text p-button-sm" (click)="onPreview(order)"></button>
                   </td>
                 </tr>
               </ng-template>
             </p-table>
+            <app-invoice-preview-dialog [(visible)]="showInvoiceDialog" [invoice]="invoicePreview" (close)="showInvoiceDialog=false"></app-invoice-preview-dialog>
           </p-card>
         </div>
 
@@ -156,5 +158,97 @@ export class DashboardComponent {
       default:
         return 'info';
     }
+  }
+
+  // Dialog state for invoice preview
+  showInvoiceDialog = false;
+  invoicePreview: Invoice | null = null;
+
+  onPreview(order: { id: string; customer: string; date: Date; status: 'Shipped' | 'Processing' | 'Delivered' | 'Pending'; total: number; }) {
+    // Aim to have invoice grand total ≈ order.total by back-calculating subtotal (before 8% tax)
+    const subtotalTargetCents = Math.max(1, Math.round((order.total / 1.08) * 100));
+    const items = this.generateInvoiceItemsFromSubtotal(subtotalTargetCents);
+    const subtotal = Math.round(items.reduce((s, it) => s + Math.round(it.total * 100), 0)) / 100;
+    const tax = Math.round(subtotal * 0.08 * 100) / 100;
+    const total = Math.round((subtotal + tax) * 100) / 100;
+
+    this.invoicePreview = {
+      id: `INV-${new Date().getFullYear()}-${(Math.floor(Math.random() * 9000) + 1000).toString()}`,
+      customerName: order.customer,
+      customerEmail: null,
+      amount: total,
+      deliveryAddress: 'N/A',
+      issueDate: new Date(order.date),
+      dueDate: new Date(order.date.getTime() + 30 * 24 * 60 * 60 * 1000),
+      status: order.status === 'Delivered' ? 'Paid' : 'Unpaid',
+      items,
+      subtotal,
+      tax,
+      total,
+    };
+    this.showInvoiceDialog = true;
+  }
+
+  private generateInvoiceItemsFromSubtotal(subtotalTargetCents: number) {
+    type InvoiceItem = { description: string; quantity: number; unitPrice: number; total: number };
+    const productNames = [
+      'Industrial Bolt (M8)',
+      'Heavy-Duty Pallet',
+      'Protective Gloves (Pack of 10)',
+      'Safety Helmet',
+      'LED Work Light',
+      'Steel Shelving Unit',
+      'Shipping Labels (Roll)',
+      'Barcode Scanner',
+      'Packing Tape (6 Pack)',
+      'Warehouse Trolley',
+      'Shrink Wrap Film',
+      'Forklift Seat Cover',
+    ];
+
+    const k = 3 + Math.floor(Math.random() * 3); // 3..5 lines
+    const base = Math.floor(subtotalTargetCents / k);
+    let remainder = subtotalTargetCents % k;
+    const lineTotalsCents: number[] = new Array(k).fill(base).map(v => v);
+    for (let i = 0; i < k && remainder > 0; i++, remainder--) lineTotalsCents[i] += 1;
+
+    const usedNames = new Set<number>();
+    const pickName = () => {
+      let idx = Math.floor(Math.random() * productNames.length);
+      let guard = 0;
+      while (usedNames.has(idx) && guard++ < 10) idx = Math.floor(Math.random() * productNames.length);
+      usedNames.add(idx);
+      return productNames[idx];
+    };
+
+    const quantities: number[] = new Array(k).fill(1);
+    // randomly add a few extra quantities to first k-1
+    const extraQty = Math.floor(Math.random() * 4);
+    for (let i = 0; i < extraQty && k > 1; i++) quantities[Math.floor(Math.random() * (k - 1))] += 1;
+
+    const items: InvoiceItem[] = [];
+    for (let i = 0; i < k; i++) {
+      const qty = i === k - 1 ? 1 : quantities[i];
+      const totalCents = lineTotalsCents[i];
+      const unitPriceCents = Math.max(1, Math.round(totalCents / qty));
+      items.push({
+        description: pickName(),
+        quantity: qty,
+        unitPrice: Math.round(unitPriceCents) / 100,
+        total: Math.round(unitPriceCents * qty) / 100,
+      });
+    }
+
+    // Adjust last line for any rounding drift to match target exactly
+    const currentSubtotalCents = Math.round(items.reduce((s, it) => s + Math.round(it.total * 100), 0));
+    const diff = subtotalTargetCents - currentSubtotalCents;
+    if (diff !== 0) {
+      const last = items[items.length - 1];
+      const adjustedTotalCents = Math.max(1, Math.round(last.total * 100) + diff);
+      last.unitPrice = Math.round(adjustedTotalCents / last.quantity) / 100;
+      last.total = Math.round(last.unitPrice * last.quantity * 100) / 100;
+    }
+
+    return items;
   }
 }
