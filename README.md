@@ -7,6 +7,8 @@
 ![PrimeFlex](https://img.shields.io/badge/primeflex-4.x-00bcd4)
 ![PrimeIcons](https://img.shields.io/badge/primeicons-7.x-9c27b0)
 
+**Live preview**: [ixa-oms.vercel.app](https://ixa-oms.vercel.app/)
+
 IXA OMS (Order Management System) is a web-based application built with Angular (v20.1.5) and PrimeNG (v20.x) for managing orders, inventory, customers, users, and settings. It is designed to be modular, scalable, and maintainable.
 
 
