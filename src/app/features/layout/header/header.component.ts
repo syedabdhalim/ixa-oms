@@ -11,12 +11,11 @@ import { Role } from '../../../shared/types/roles';
 })
 export class HeaderComponent {
   @Input() userRole: Role = 'Admin';
+  @Input() pageTitle: string = 'Dashboard';
   @Output() menuClick = new EventEmitter<void>();
   @Output() logout = new EventEmitter<void>();
 
   get roleDisplayName() {
     return this.userRole === 'Customer' ? 'Customer Portal' : `IXA OMS ${this.userRole}`;
   }
-
-  pageTitle = 'Dashboard'; // Nanti kita boleh kira ikut route
 }
