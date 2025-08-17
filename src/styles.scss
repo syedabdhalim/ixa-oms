@@ -10,6 +10,15 @@
   --surface-bg: #f7f8fa;
 }
 
+/* Global scale: PrimeNG uses rem; tune root size to adjust overall density */
+html {
+  font-size: 12px;
+}
+
+@media (min-width: 1280px) {
+  html { font-size: 12px; }
+}
+
 /* Base typography */
 html, body { height: 100%; }
 body {
